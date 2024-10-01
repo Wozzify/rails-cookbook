@@ -12,13 +12,20 @@ Recipe.destroy_all
 Category.destroy_all
 
 300.times do
-  result = FetchRandomMealService.call
-  category = Category.find_or_create_by(name: result[:meal_area])
-  Recipe.find_or_create_by(
-    name: result[:meal_name],
-    category_id: category.id
-  ) do |recipe|
-    recipe.image_url = result[:meal_thumb]
-    recipe.rating = rand(4..10)
+  begin
+    result = FetchRandomMealService.call
+    category = Category.find_or_create_by(name: result[:meal_area])
+    Recipe.find_or_create_by(
+      name: result[:meal_name],
+      category_id: category.id
+    ) do |recipe|
+      recipe.image_url = result[:meal_thumb]
+      recipe.rating = rand(4..10)
+    end
+  rescue JSON::ParserError => e
+    puts "Error parsing JSON: #{e.message}"
   end
+
+  # Introduce a delay to avoid hitting the rate limit
+  sleep(0.3) # Adjust the sleep duration as needed
 end
