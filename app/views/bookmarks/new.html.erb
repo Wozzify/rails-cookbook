@@ -1,17 +1,25 @@
-<h1 class="text-center">New Bookmark for <%= @category.name %></h1>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">New Bookmark for <%= @category.name %></h1>
 
-<%= simple_form_for [@category, @bookmark], html: { class: 'form-horizontal' } do |form| %>
-  <div class="form-group">
-    <%= form.input :recipe_id, collection: @recipes.map { |recipe| [recipe.name, recipe.id] }, label: 'Select a Recipe', prompt: 'Choose a recipe', input_html: { class: 'form-control' } %>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <%= simple_form_for [@category, @bookmark], html: { class: 'form-horizontal' } do |form| %>
+        <div class="form-group">
+          <%= form.input :recipe_id, collection: @recipes.map { |recipe| [recipe.name, recipe.id] }, label: 'Select a Recipe', prompt: 'Choose a recipe', input_html: { class: 'form-control' } %>
+        </div>
+
+        <div class="form-group">
+          <%= form.input :comment, input_html: { class: 'form-control' } %>
+        </div>
+
+        <div class="form-group text-center">
+          <%= form.button :submit, class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+
+      <div class="text-center mt-3">
+        <%= link_to 'Back to Category', category_path(@category), class: 'btn btn-secondary' %>
+      </div>
+    </div>
   </div>
-
-  <div class="form-group">
-    <%= form.input :comment, input_html: { class: 'form-control' } %>
-  </div>
-
-  <div class="form-group">
-    <%= form.button :submit, class: 'btn btn-primary' %>
-  </div>
-<% end %>
-
-<%= link_to 'Back to Category', category_path(@category), class: 'btn btn-secondary' %>
+</div>
