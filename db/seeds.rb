@@ -8,11 +8,14 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+Recipe.destroy_all
+
 10.times do
   result = FetchRandomMealService.call
   Recipe.create(
     name: result[:meal_name],
     image_url: result[:meal_thumb],
-    rating: rand(1..10) # Random rating between 1 and 10
+    rating: rand(4..10)
   )
 end
