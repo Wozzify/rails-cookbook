@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_01_105837) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_01_141232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,6 +31,18 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_01_105837) do
     t.string "image_url"
   end
 
+  create_table "recipes", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "image_url"
+    t.decimal "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_recipes_on_category_id"
+  end
+
   add_foreign_key "bookmarks", "categories"
   add_foreign_key "bookmarks", "recipes"
+  add_foreign_key "recipes", "categories"
 end
