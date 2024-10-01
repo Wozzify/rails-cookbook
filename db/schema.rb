@@ -31,17 +31,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_01_105837) do
     t.string "image_url"
   end
 
-  create_table "recipes", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.string "image_url"
-    t.float "rating"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "ingredients"
-    t.text "instructions"
-  end
-
   add_foreign_key "bookmarks", "categories"
   add_foreign_key "bookmarks", "recipes"
 end
