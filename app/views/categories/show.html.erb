@@ -1,0 +1,31 @@
+<div class="container mt-5">
+  <h1 class="text-center mb-4"><%= @category.name %></h1>
+
+  <h2 class="mb-4">Recipes</h2>
+
+  <div class="row">
+    <% @category.recipes.each do |recipe| %>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm" style="background-image: url('<%= recipe.image_url %>'); background-size: cover; background-position: center; height: 500px;">
+          <div class="card-body d-flex flex-column justify-content-end text-center text-white">
+            <h4 class="card-title"><%= recipe.name %></h4>
+            <p class="card-text"><%= recipe.description %></p>
+          </div>
+
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <%= link_to 'Delete', category_bookmark_path(@category, @category.bookmarks.find_by(recipe: recipe)),
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                        class: 'btn btn-danger btn-sm' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="d-flex justify-content-center mb-3">
+    <%= link_to 'Add Recipe', new_category_bookmark_path(@category), class: 'btn btn-primary mx-2' %>
+    <%= link_to 'Back to Categories', categories_path, class: 'btn btn-secondary mx-2' %>
+    <%= link_to 'Edit Category', edit_category_path(@category), class: 'btn btn-outline-primary mx-2' %>
+    <%= link_to "Delete Category", category_path(@category), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-outline-danger mx-2" %>
+  </div>
+</div>

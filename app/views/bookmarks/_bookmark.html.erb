@@ -1,0 +1,10 @@
+<div class="polite-card">
+    <img src="<%= bookmark.recipe.image_url %>" class="card-img-top" alt="<%= bookmark.recipe.name %>">
+        <div class="css-card">
+            <%= link_to bookmark.recipe.name, class: "card-title" %>
+             <p class="card-text"><%= bookmark.recipe.description %></p>
+             <p class="card-text" style="margin-bottom: 5px; margin-top: -15px"><strong>Rating:</strong> <%= bookmark.recipe.rating %></p>
+             <p class="card-text"><strong>Comment:</strong> <%= bookmark.comment %></p>
+            <%= link_to 'Delete', category_bookmark_path(@category, bookmark), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-outline-danger btn-sm" %>
+        </div>
+    </div>

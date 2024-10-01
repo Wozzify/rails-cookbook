@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_30_084450) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_01_105837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_30_084450) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image_url"
   end
 
   create_table "recipes", force: :cascade do |t|
@@ -37,6 +38,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_30_084450) do
     t.float "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "ingredients"
+    t.text "instructions"
   end
 
   add_foreign_key "bookmarks", "categories"
