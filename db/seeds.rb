@@ -12,7 +12,6 @@
   result = FetchRandomMealService.call
   Recipe.create(
     name: result[:meal_name],
-    description: "Randomly generated recipe from TheMealDB",
     image_url: result[:meal_thumb],
     rating: rand(1..10) # Random rating between 1 and 10
   )
