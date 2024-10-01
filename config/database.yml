@@ -16,7 +16,7 @@ test:
 
 production:
   <<: *default
-  database: your_db_name_production
-  username: your_db_username
-  password: <%= ENV['DATABASE_PASSWORD'] %>
-  host: <%= ENV['DATABASE_HOST'] %>
+  database: your_production_db_name
+  username: <%= ENV['PRODUCTION_DB_USERNAME'] %>
+  password: <%= ENV['PRODUCTION_DB_PASSWORD'] %>
+  host: <%= ENV['PRODUCTION_DB_HOST'] %>
