@@ -3,17 +3,16 @@ class BookmarksController < ApplicationController
 
   def new
     @bookmark = Bookmark.new
-    @recipes = Recipe.where.not(id: @category.bookmarks.select(:recipe_id)).order(:name)
+    @recipes = Recipe.where.not(id: @category.bookmarks.pluck(:recipe_id)).order(:name)
   end
 
   def create
-    @bookmark = Bookmark.new(bookmark_params)
-    @bookmark.category = @category
-    @recipes = Recipe.where.not(id: @category.bookmarks.select(:recipe_id)).order(:name)
+    @bookmark = @category.bookmarks.new(bookmark_params)
 
     if @bookmark.save
       redirect_to category_path(@category)
     else
+      @recipes = Recipe.where.not(id: @category.bookmarks.pluck(:recipe_id)).order(:name)
       render :new, status: :unprocessable_entity
     end
   end

@@ -4,8 +4,7 @@
   <h2 class="mb-4">Recipes</h2>
 
   <div class="row">
-    <% @category.recipes.each do |recipe| %>
-      <% bookmark = @category.bookmarks.find_by(recipe: recipe) %>
+    <% @recipes.each do |recipe| %>
       <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-sm" style="display: flex; flex-direction: column;">
           <div class="card-img" style="background-image: url('<%= recipe.image_url %>'); background-size: cover; background-position: center; height: 300px;"></div>
@@ -13,8 +12,10 @@
           <div class="card-body text-center text-black" style="flex-grow: 1;">
             <h4 class="card-title"><%= recipe.name %></h4>
             <p class="card-text"><%= recipe.description %></p>
-            <% if bookmark && bookmark.comment.present? %>
-              <p class="card-text"><strong>Comment:</strong> <%= bookmark.comment %></p>
+            <% recipe.bookmarks.each do |bookmark| %>
+              <% if bookmark.comment.present? %>
+                <p class="card-text"><strong>Comment:</strong> <%= bookmark.comment %></p>
+              <% end %>
             <% end %>
           </div>
 
@@ -22,9 +23,9 @@
             <div class="rating">
               <span>Rating: <%= recipe.rating %> / 10</span>
             </div>
-            <%= link_to 'Delete', category_bookmark_path(@category, bookmark),
-                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                        class: 'btn btn-danger btn-sm' %>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#commentModal-<%= recipe.id %>">
+              Add Comment
+            </button>
           </div>
         </div>
       </div>
@@ -38,3 +39,29 @@
     <%= link_to "Delete Category", category_path(@category), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-outline-danger mx-2" %>
   </div>
 </div>
+
+<% @recipes.each do |recipe| %>
+  <div class="modal fade" id="commentModal-<%= recipe.id %>" tabindex="-1" aria-labelledby="commentModalLabel-<%= recipe.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentModalLabel-<%= recipe.id %>">Add Comment to <%= recipe.name %></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <%= form_with(model: [@category, recipe.bookmarks.build], local: true) do |form| %>
+            <div class="mb-3">
+              <%= form.label :comment %>
+              <%= form.text_area :comment, class: 'form-control' %>
+              <%= form.hidden_field :recipe_id, value: recipe.id %>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <%= form.submit 'Save Comment', class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

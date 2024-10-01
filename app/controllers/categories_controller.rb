@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
   def index
-    @categories = Category.all
+    @categories = Category.order(:name)
   end
 
   def new
@@ -20,7 +20,7 @@ class CategoriesController < ApplicationController
 
   def show
     @category = Category.find(params[:id])
-    @recipe = @category.recipes
+    @recipes = Recipe.where(category_id: @category.id)
   end
 
   def edit
