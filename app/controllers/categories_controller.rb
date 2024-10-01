@@ -43,6 +43,25 @@ class CategoriesController < ApplicationController
     redirect_to categories_path, status: :see_other
   end
 
+  # For handling bookmark comment edits
+  def edit_comment
+    @category = Category.find(params[:category_id])
+    @recipe = Recipe.find(params[:recipe_id])
+    @bookmark = Bookmark.find(params[:id]) # Find bookmark by ID
+  end
+
+  def update_comment
+    @category = Category.find(params[:category_id])
+    @recipe = Recipe.find(params[:recipe_id])
+    @bookmark = Bookmark.find(params[:id])
+
+    if @bookmark.update(bookmark_params)
+      redirect_to category_path(@category), notice: "Comment updated successfully."
+    else
+      render :edit_comment
+    end
+  end
+
   private
 
   RANDOM_IMAGES = [
@@ -55,5 +74,9 @@ class CategoriesController < ApplicationController
 
   def category_params
     params.require(:category).permit(:name)
+  end
+
+  def bookmark_params
+    params.require(:bookmark).permit(:comment, :recipe_id)
   end
 end

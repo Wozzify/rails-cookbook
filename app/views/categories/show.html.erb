@@ -23,9 +23,16 @@
             <div class="rating">
               <span>Rating: <%= recipe.rating %> / 10</span>
             </div>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#commentModal-<%= recipe.id %>">
-              Add Comment
-            </button>
+            <% bookmark_with_comment = recipe.bookmarks.find { |b| b.comment.present? } %>
+            <% if bookmark_with_comment %>
+              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#commentModal-<%= recipe.id %>">
+                Edit Comment
+              </button>
+            <% else %>
+              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#commentModal-<%= recipe.id %>">
+                Add Comment
+              </button>
+            <% end %>
           </div>
         </div>
       </div>
@@ -33,31 +40,37 @@
   </div>
 
   <div class="d-flex justify-content-center mb-3">
-    <%= link_to 'Add Recipe', new_category_bookmark_path(@category), class: 'btn btn-primary mx-2' %>
+    <% @recipes.each do |recipe| %>
+      <%= link_to 'Add Bookmark', new_category_recipe_bookmark_path(@category, recipe), class: 'btn btn-primary mx-2' %>
+    <% end %>
     <%= link_to 'Back to Categories', categories_path, class: 'btn btn-secondary mx-2' %>
     <%= link_to 'Edit Category', edit_category_path(@category), class: 'btn btn-outline-primary mx-2' %>
     <%= link_to "Delete Category", category_path(@category), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-outline-danger mx-2" %>
   </div>
 </div>
 
+<!-- Modals for Adding/Editing Comments -->
 <% @recipes.each do |recipe| %>
+  <% bookmark_with_comment = recipe.bookmarks.find { |b| b.comment.present? } %>
   <div class="modal fade" id="commentModal-<%= recipe.id %>" tabindex="-1" aria-labelledby="commentModalLabel-<%= recipe.id %>" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="commentModalLabel-<%= recipe.id %>">Add Comment to <%= recipe.name %></h5>
+          <h5 class="modal-title" id="commentModalLabel-<%= recipe.id %>">
+            <%= bookmark_with_comment ? 'Edit' : 'Add' %> Comment for <%= recipe.name %>
+          </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <%= form_with(model: [@category, recipe.bookmarks.build], local: true) do |form| %>
+          <%= form_with(model: [@category, bookmark_with_comment || recipe.bookmarks.build], url: bookmark_with_comment ? category_recipe_bookmark_path(@category, recipe, bookmark_with_comment) : category_recipe_bookmarks_path(@category, recipe), local: true) do |form| %>
             <div class="mb-3">
               <%= form.label :comment %>
-              <%= form.text_area :comment, class: 'form-control' %>
+              <%= form.text_area :comment, class: 'form-control', value: bookmark_with_comment&.comment %>
               <%= form.hidden_field :recipe_id, value: recipe.id %>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <%= form.submit 'Save Comment', class: 'btn btn-primary' %>
+              <%= form.submit bookmark_with_comment ? 'Update Comment' : 'Save Comment', class: 'btn btn-primary' %>
             </div>
           <% end %>
         </div>

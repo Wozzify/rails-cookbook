@@ -23,6 +23,16 @@ class BookmarksController < ApplicationController
     redirect_to category_path(@category), status: :see_other
   end
 
+  def update
+    @bookmark = Bookmark.find(params[:id])
+
+    if @bookmark.update(bookmark_params)
+      redirect_to category_path(@category), notice: 'Bookmark updated successfully.'
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_category
