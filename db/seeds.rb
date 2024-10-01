@@ -20,7 +20,7 @@ Category.destroy_all
       category_id: category.id
     ) do |recipe|
       recipe.image_url = result[:meal_thumb]
-      recipe.rating = rand(4..10)
+      recipe.rating = rand(6..10)
     end
   rescue JSON::ParserError => e
     puts "Error parsing JSON: #{e.message}"
